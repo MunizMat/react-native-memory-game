@@ -11,7 +11,6 @@ import React, {
 import { icons } from '../../constants/icons';
 import { shuffleArray } from '../../utils/shuffleArray';
 import { GameDifficulty, IconProps } from '../../types';
-import { getMatchingCards } from '../../utils/getMatchingCards';
 import { useSettings } from '../Settings';
 
 interface GameContextProps {
@@ -36,6 +35,7 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
 
   /* ---------- Constants ---------- */
   const maxLevel = 6;
+  const numOfAttempts = 2;
 
   const gameDifficultySeconds: Record<GameDifficulty, number> = {
     easy: 4,
@@ -62,7 +62,7 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
   );
 
   /* ---------- States ---------- */
-  const [attempts, setAttempts] = useState(3);
+  const [attempts, setAttempts] = useState(numOfAttempts);
   const [gameHasStarted, setGameHasStarted] = useState(false);
   const [cards, setCards] = useState<IconProps[]>(allCards);
 
@@ -74,7 +74,8 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
   const previewSeconds = gameDifficultySeconds[gameDifficulty];
 
   const handleAttempts = () => {
-    const matchingCards = getMatchingCards(selectedCards.current);
+    const [card1, card2] = selectedCards.current;
+    const matchingCards = card1.name === card2.name ? [card1, card2] : [];
 
     selectedCards.current = [];
 
@@ -82,13 +83,13 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
       if (matchingCards.length) {
         setCards(
           cards.map((card) =>
-            card.name === matchingCards[0].name
+            card.name === card1.name
               ? { ...card, uncovered: true }
               : { ...card, visible: false },
           ),
         );
       } else setCards(cards.map((card) => ({ ...card, visible: false })));
-      setAttempts(3);
+      setAttempts(numOfAttempts);
     }, 2000);
   };
 
