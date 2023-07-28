@@ -21,8 +21,6 @@ interface GameContextProps {
   restartGame: () => void;
   gameHasStarted: boolean;
   previewSeconds: number;
-  setPreviewSeconds: React.Dispatch<React.SetStateAction<number>>;
-  handlePreviewSecondsChange: (text: string) => string;
   setGameDifficulty: React.Dispatch<React.SetStateAction<GameDifficulty>>;
   gameDifficulty: GameDifficulty;
 }
@@ -39,8 +37,11 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
   /* ---------- Constants ---------- */
   const maxLevel = 6;
 
-  const minPreviewSeconds = 0.1;
-  const maxPreviewSeconds = 5;
+  const gameDifficultySeconds: Record<GameDifficulty, number> = {
+    easy: 4,
+    medium: 2,
+    hard: 1,
+  };
 
   const initialCards = icons.slice(maxLevel - level).map((icon) => ({
     ...icon,
@@ -64,7 +65,6 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
   const [attempts, setAttempts] = useState(3);
   const [gameHasStarted, setGameHasStarted] = useState(false);
   const [cards, setCards] = useState<IconProps[]>(allCards);
-  const [previewSeconds, setPreviewSeconds] = useState(3);
   const [gameDifficulty, setGameDifficulty] = useState<GameDifficulty>('easy');
 
   /* ---------- Refs ---------- */
@@ -72,6 +72,7 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
   const selectedCards = useRef<IconProps[]>([]);
 
   const uncoveredCards = cards.filter((card) => card.uncovered);
+  const previewSeconds = gameDifficultySeconds[gameDifficulty];
 
   const handleAttempts = () => {
     const matchingCards = getMatchingCards(selectedCards.current);
@@ -146,19 +147,6 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
     );
   };
 
-  const handlePreviewSecondsChange = (text: string) => {
-    let newSeconds = Number(text);
-
-    if (isNaN(newSeconds)) newSeconds = 3;
-
-    if (newSeconds > maxPreviewSeconds) newSeconds = maxPreviewSeconds;
-
-    if (newSeconds < minPreviewSeconds) newSeconds = minPreviewSeconds;
-
-    setPreviewSeconds(newSeconds);
-    return newSeconds.toString();
-  };
-
   const value = useMemo(
     () => ({
       handleCardPress,
@@ -167,9 +155,7 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
       gameHasStarted,
       startGame,
       restartGame,
-      setPreviewSeconds,
       previewSeconds,
-      handlePreviewSecondsChange,
       setGameDifficulty,
       gameDifficulty,
     }),
@@ -180,9 +166,7 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
       gameHasStarted,
       startGame,
       restartGame,
-      setPreviewSeconds,
       previewSeconds,
-      handlePreviewSecondsChange,
       setGameDifficulty,
       gameDifficulty,
     ],

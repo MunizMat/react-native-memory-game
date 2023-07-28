@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Divider,
   Flex,
   HStack,
-  Input,
   Radio,
   Switch,
   Text,
-  VStack,
   useTheme,
 } from 'native-base';
 import { useColorMode } from 'native-base';
@@ -19,14 +17,7 @@ import { GameDifficulty } from '../../types';
 export const Settings = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { colors } = useTheme();
-  const {
-    handlePreviewSecondsChange,
-    previewSeconds,
-    setGameDifficulty,
-    gameDifficulty,
-  } = useGame();
-
-  const [value, setValue] = useState(previewSeconds.toString());
+  const { setGameDifficulty, gameDifficulty } = useGame();
 
   return (
     <Box padding={10} flex={1} alignItems="center" justifyContent="flex-start">
@@ -48,32 +39,6 @@ export const Settings = () => {
           isChecked={colorMode === 'light'}
           onToggle={() => toggleColorMode()}
           size="md"
-        />
-      </Flex>
-      <Divider my={4} />
-      <Flex
-        width="full"
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <VStack maxW="2/3">
-          <Text fontSize="2xl">Preview Seconds</Text>
-          <Text fontSize="xs">
-            Amount of seconds to view the cards before they are hidden (Min:
-            0.1, Max: 5)
-          </Text>
-        </VStack>
-        <Input
-          style={{ fontSize: 25, textAlign: 'center' }}
-          value={value}
-          onChangeText={(text) => setValue(text)}
-          onEndEditing={() => {
-            const updatedSeconds = handlePreviewSecondsChange(value);
-            setValue(updatedSeconds);
-          }}
-          variant="underlined"
-          maxW={50}
         />
       </Flex>
       <Divider my={4} />
