@@ -44,7 +44,7 @@ export const Settings = () => {
       </Flex>
       <Divider my={4} />
       <HStack alignItems="center" justifyContent="space-between" w="full">
-        <Text fontSize="2xl">Dificulty</Text>
+        <Text fontSize="2xl">Difficulty</Text>
         <Radio.Group
           name="difficulty"
           value={gameDifficulty}
