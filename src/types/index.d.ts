@@ -12,3 +12,8 @@ export interface IconProps {
 export type CardIconState = 'hidden' | 'visible';
 
 export type GameDifficulty = 'easy' | 'medium' | 'hard';
+
+export interface AppSettings {
+  gameDifficulty: GameDifficulty;
+  colorMode: 'light' | 'dark';
+}

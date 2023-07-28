@@ -11,13 +11,14 @@ import {
 } from 'native-base';
 import { useColorMode } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
-import { useGame } from '../../contexts/Game';
 import { GameDifficulty } from '../../types';
+import { useSettings } from '../../contexts/Settings';
 
 export const Settings = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { colors } = useTheme();
-  const { setGameDifficulty, gameDifficulty } = useGame();
+  const { updateSettings, settings } = useSettings();
+  const { gameDifficulty } = settings;
 
   return (
     <Box padding={10} flex={1} alignItems="center" justifyContent="flex-start">
@@ -47,7 +48,12 @@ export const Settings = () => {
         <Radio.Group
           name="difficulty"
           value={gameDifficulty}
-          onChange={(value) => setGameDifficulty(value as GameDifficulty)}
+          onChange={(value) =>
+            updateSettings({
+              ...settings,
+              gameDifficulty: value as GameDifficulty,
+            })
+          }
         >
           <Radio value="easy" my={1}>
             Easy

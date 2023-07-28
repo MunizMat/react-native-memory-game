@@ -12,6 +12,7 @@ import { icons } from '../../constants/icons';
 import { shuffleArray } from '../../utils/shuffleArray';
 import { GameDifficulty, IconProps } from '../../types';
 import { getMatchingCards } from '../../utils/getMatchingCards';
+import { useSettings } from '../Settings';
 
 interface GameContextProps {
   handleCardPress: (icon: IconProps) => void;
@@ -21,8 +22,6 @@ interface GameContextProps {
   restartGame: () => void;
   gameHasStarted: boolean;
   previewSeconds: number;
-  setGameDifficulty: React.Dispatch<React.SetStateAction<GameDifficulty>>;
-  gameDifficulty: GameDifficulty;
 }
 
 interface GameProviderProps {
@@ -32,6 +31,7 @@ interface GameProviderProps {
 const GameContext = createContext<GameContextProps>({} as GameContextProps);
 
 export const GameProvider: FC<GameProviderProps> = ({ children }) => {
+  const { gameDifficulty } = useSettings().settings;
   const [level, setLevel] = useState(1);
 
   /* ---------- Constants ---------- */
@@ -65,7 +65,6 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
   const [attempts, setAttempts] = useState(3);
   const [gameHasStarted, setGameHasStarted] = useState(false);
   const [cards, setCards] = useState<IconProps[]>(allCards);
-  const [gameDifficulty, setGameDifficulty] = useState<GameDifficulty>('easy');
 
   /* ---------- Refs ---------- */
 
@@ -156,7 +155,6 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
       startGame,
       restartGame,
       previewSeconds,
-      setGameDifficulty,
       gameDifficulty,
     }),
     [
@@ -167,7 +165,6 @@ export const GameProvider: FC<GameProviderProps> = ({ children }) => {
       startGame,
       restartGame,
       previewSeconds,
-      setGameDifficulty,
       gameDifficulty,
     ],
   );
